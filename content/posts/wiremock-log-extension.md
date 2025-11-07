@@ -1,6 +1,6 @@
 ---
 title: "Structured JSON Logging for WireMock: A Custom Extension for Easy Log Aggregation"
-date: 2025-11-07T15:00:00+01:00
+date: 2025-11-06T20:00:00+01:00
 draft: false
 tags: ["Java", "WireMock", "Logging", "JSON", "Observability", "Logstash", "Testing", "DevOps"]
 description: "Learn how to build and use a custom WireMock extension to generate clean, single-line JSON logs, perfect for ingestion by systems like Logstash, OpenSearch, and the ELK stack."
@@ -15,7 +15,7 @@ In this post, we'll walk through a custom WireMock extension that transforms thi
 When WireMock serves a request, it logs a detailed, human-readable summary to the console. It looks something like this:
 
 ```
-2023-11-06 14:30:00.123 ===============================================================================
+2025-11-06 20:00:00.123 ===============================================================================
 | Request received:                                                              |
 |   GET /api/users/123                                                           |
 |   Accept: [application/json]                                                   |
