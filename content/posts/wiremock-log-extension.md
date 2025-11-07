@@ -228,4 +228,4 @@ With a simple Java extension, we've transformed WireMock's logging from a develo
 
 You can find the complete source code, including the Maven project and unit tests, on GitHub.
 
-**[Check out the full project on GitHub!](https://github.com/[your-github-username]/wiremock-log-extension)**
+**[Check out the full project on GitHub!](https://github.com/bernalvarela/wiremock-log-extension)**
