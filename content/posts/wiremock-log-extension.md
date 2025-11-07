@@ -1,6 +1,6 @@
 ---
 title: "Structured JSON Logging for WireMock: A Custom Extension for Easy Log Aggregation"
-date: 2023-11-06T15:00:00+01:00
+date: 2025-11-07T15:00:00+01:00
 draft: false
 tags: ["Java", "WireMock", "Logging", "JSON", "Observability", "Logstash", "Testing", "DevOps"]
 description: "Learn how to build and use a custom WireMock extension to generate clean, single-line JSON logs, perfect for ingestion by systems like Logstash, OpenSearch, and the ELK stack."
