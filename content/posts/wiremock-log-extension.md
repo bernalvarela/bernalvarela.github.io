@@ -138,39 +138,80 @@ This Logstash pipeline listens for the syslog stream, reassembles any large logs
 ```ruby
 input {
     tcp {
-        port => 12201
+        port => 12201 # We keep the same port
+        # We use the multiline codec to reassemble the chunks
         codec => multiline {
-            # A new log event starts with a syslog header and contains "{@timestamp}"
-            pattern => "^\\<[0-9]{1,3}\\>.*\\{\\"@timestamp\\""
+            # The pattern that defines the START of a new message.
+            # Your JSON always starts with `{"@timestamp":`.
+            pattern => "^\<[0-9]{1,3}\>.*\{\"@timestamp\""
+            # If a line does NOT start with that pattern...
             negate => true
+            # ... then it belongs to the previous line.
             what => "previous"
+            # Wait 2 seconds before sending a message if no more lines arrive.
+            auto_flush_interval => 2
         }
+        # We add a tag to identify these logs in the filter.
         tags => ["wiremock_multiline_stream"]
     }
 }
 
 filter {
+    # We identify if the log comes from the WireMock stream by the tag added in the input.
     if "wiremock_multiline_stream" in [tags] {
-        # 1. Discard WireMock's startup messages
-        if [message] !~ /\\{\\"@timestamp\\"/ {
+
+        # 1. First, check if the reassembled message is a JSON log from our extension.
+        #    WireMock's own startup messages won't contain '{"@timestamp"'.
+        if [message] !~ /\{\"@timestamp\"/ {
+            # If it's a startup log or any other non-JSON message, we drop it.
             drop {}
         }
 
-        # 2. Extract the pure JSON from the syslog message
+        # 2. If we are here, 'message' contains the full syslog line + the JSON payload.
+        #    We use grok to extract only the JSON part.
         grok {
-            match => { "message" => "(?<json_content>\\{[\\s\\S]*)" }
+            # Capture everything starting from the first curly brace '{'.
+            # We use [\s\S]* to ensure we match any character, including newlines.
+            match => { "message" => "(?<json_content>\{[\s\S]*)" }
         }
 
-        # 3. Clean up newlines and parse the JSON
+        # This block only executes if the grok filter was successful.
         if [json_content] {
+            # Clean up any residual newlines from the extracted JSON string before parsing.
             mutate {
-                gsub => [ "json_content", "\\n", "" ]
+                gsub => [
+                    "json_content", "\n", ""
+                ]
             }
+
+            # Parse the cleaned JSON string from the 'json_content' field.
             json {
                 source => "json_content"
             }
+
+            # Rename the original 'host' field to avoid conflicts and add clarity.
+            mutate {
+                rename => { "host" => "source_host_details" }
+            }
+
+            mutate {
+                # Set the target index for Elasticsearch/OpenSearch.
+                add_field => { "[@metadata][target_index]" => "wiremock-logs-%{+YYYY.MM.dd}" }
+                # Clean up the fields we no longer need to keep the final document clean.
+                remove_field => ["[event][original]", "json_content", "message", "tags"]
+            }
+        } else {
+            # If grok fails to extract the JSON, we tag the event for debugging.
+            mutate {
+               add_tag => ["_grok_json_extract_failure"]
+            }
         }
-        # ... other cleanup ...
+    } else {
+        # Any log that doesn't have the 'wiremock_multiline_stream' tag is treated as an unknown log.
+        # Instead of dropping it, we route it to a separate error index for inspection.
+        mutate {
+            add_field => { "[@metadata][target_index]" => "wiremock-errors-logs-%{+YYYY.MM.dd}" }
+        }
     }
 }
 
