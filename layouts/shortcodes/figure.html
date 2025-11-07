@@ -1,12 +1,12 @@
 <figure {{ with .Get "class" }}class="{{ . }}"{{ end }}>
-{{ if .Get "link" }}
-<a href="{{ .Get "link" | default (.Get "src") }}" {{ with .Get "target" }}target="{{ . }}"{{ end }} {{ with .Get "rel" }}rel="{{ . }}"{{ end }} data-lity>
-<img src="{{ .Get "src" }}" {{ with .Get "alt" }}alt="{{ . }}"{{ end }} {{ with .Get "width" }}width="{{ . }}"{{ end }} {{ with .Get "height" }}height="{{ . }}"{{ end }}>
-</a>
-{{ else }}
-<img src="{{ .Get "src" }}" {{ with .Get "alt" }}alt="{{ . }}"{{ end }} {{ with .Get "width" }}width="{{ . }}"{{ end }} {{ with .Get "height" }}height="{{ . }}"{{ end }}>
-{{ end }}
-{{ if or (.Get "title") (.Get "caption") }}
-<figcaption>{{ .Get "title" | default (.Get "caption") }}</figcaption>
-{{ end }}
+    {{ if .Get "link" }}
+        <a href="{{ .Get "link" | default (.Get "src") }}" {{ with .Get "target" }}target="{{ . }}"{{ end }} {{ with .Get "rel" }}rel="{{ . }}"{{ end }} data-lity>
+            <img src="{{ .Get "src" }}" {{ with .Get "alt" }}alt="{{ . }}"{{ end }} {{ with .Get "width" }}width="{{ . }}"{{ end }} {{ with .Get "height" }}height="{{ . }}"{{ end }}>
+        </a>
+    {{ else }}
+        <img src="{{ .Get "src" }}" {{ with .Get "alt" }}alt="{{ . }}"{{ end }} {{ with .Get "width" }}width="{{ . }}"{{ end }} {{ with .Get "height" }}height="{{ . }}"{{ end }}>
+    {{ end }}
+    {{ if or (.Get "title") (.Get "caption") }}
+        <figcaption>{{ .Get "title" | default (.Get "caption") }}</figcaption>
+    {{ end }}
 </figure>
