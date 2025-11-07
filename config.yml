@@ -14,7 +14,7 @@ buildExpired: false
 enableEmoji: true
 pygmentsUseClasses: true
 mainsections: ["posts", "papermod"]
-# googleAnalytics: UA-123-45
+googleAnalytics: G-S9GGJLSRGN
 
 minify:
   disableXML: true
@@ -108,7 +108,7 @@ params:
   # icon: icon.png
   # iconHeight: 35
 
-  googleAnalytics: G-S9GGJLSRGN
+
 
   analytics:
     google:
