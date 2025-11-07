@@ -12,7 +12,7 @@ To add a new post to the blog, follow these steps:
 
 2.  **Add the front matter** to the top of the file. This is a YAML block that contains metadata about the post. Here is a basic example:
 
-    '''yaml
+    ```yaml
     ---
     title: "Your Post Title"
     date: 2024-10-27T10:00:00+02:00
@@ -20,7 +20,7 @@ To add a new post to the blog, follow these steps:
     tags: ["Technology", "Programming", "Java"]
     description: "A brief summary of your post."
     ---
-    '''
+    ```
 
     - `title`: The title of the post.
     - `date`: The publication date and time.
