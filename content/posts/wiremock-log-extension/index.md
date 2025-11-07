@@ -222,6 +222,22 @@ output {
 }
 ```
 
+### The Final Result in OpenSearch
+
+After setting up the entire pipeline, the logs are parsed, enriched, and stored in OpenSearch. The result is a collection of structured, easily searchable documents. You can use OpenSearch Dashboards to explore the data, create visualizations, and build monitoring dashboards.
+
+Here is an example of how the final log looks in OpenSearch Dashboards:
+
+![Final result in OpenSearch](./opensearch-result.png "Final result in OpenSearch")
+
+
+In contrast, when the response is a standard JSON object, the entire body is logged, providing full visibility into the data being exchanged.
+
+Here is a view of a log containing a full JSON document as seen in OpenSearch:
+
+![JSON document in OpenSearch](./opensearch-json-document.png "JSON document in OpenSearch")
+
+
 ### Conclusion
 
 With a simple Java extension, we've transformed WireMock's logging from a developer-focused convenience into a powerful, production-ready data source for observability. This approach makes it incredibly easy to monitor, alert on, and analyze your test traffic, bridging the gap between integration testing and production monitoring.
