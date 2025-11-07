@@ -110,9 +110,9 @@ params:
 
   googleAnalytics: G-S9GGJLSRGN
 
-  # analytics:
-  #     google:
-  #         SiteVerificationTag: "XYZabc"
+  analytics:
+    google:
+      SiteVerificationTag: "G-S9GGJLSRGN"
 
   assets:
     disableHLJS: true
