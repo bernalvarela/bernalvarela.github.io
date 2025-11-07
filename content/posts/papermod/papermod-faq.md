@@ -6,7 +6,6 @@ aliases: ["/papermod-how-to-guide"]
 tags: ["PaperMod", "Docs"]
 author: ["PaperMod Contributors"]
 draft: true
-aliases: [/posts/papermod/papermod-how-to]
 weight: 3
 ---
 

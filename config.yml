@@ -1,8 +1,9 @@
-# If your site is in 'https', then make sure your base url isn't written using 'http' otherwise your sitemap would
+# If your site is in 'https''', then make sure your base url isn't written using 'http' otherwise your sitemap would
 # contain http (as opposeed to https) URLs. This would affect Google indexing of your URLs.
 baseURL: "https://bernalvarela.is-a.dev"
 title: Bernal Varela
-paginate: 5
+pagination:
+  pagerSize: 5
 theme: [PaperMod]
 
 enableInlineShortcodes: true
@@ -222,7 +223,7 @@ markup:
 #     disabled: false
 #     simple: true
 
-#   twitter:
+#   x:
 #     disabled: false
 #     enableDNT: true
 #     simple: true
@@ -238,5 +239,5 @@ markup:
 services:
   instagram:
     disableInlineCSS: true
-  twitter:
+  x:
     disableInlineCSS: true
