@@ -1,12 +1,22 @@
+{{- $src := .Get "src" -}}
+{{- $image := .Page.Resources.GetMatch $src -}}
+{{- if not $image -}}
+  {{- $image = .Page.Resources.GetMatch (printf "**%s" $src) -}}
+{{- end -}}
+
+{{- $link := .Get "link" | default $src -}}
+{{- $linkResource := .Page.Resources.GetMatch $link -}}
+{{- if not $linkResource -}}
+  {{- $linkResource = .Page.Resources.GetMatch (printf "**%s" $link) -}}
+{{- end -}}
+
 <figure {{ with .Get "class" }}class="{{ . }}"{{ end }}>
-    {{ if .Get "link" }}
-        <a href="{{ .Get "link" | default (.Get "src") }}" {{ with .Get "target" }}target="{{ . }}"{{ end }} {{ with .Get "rel" }}rel="{{ . }}"{{ end }} data-lity>
-            <img src="{{ .Get "src" }}" {{ with .Get "alt" }}alt="{{ . }}"{{ end }} {{ with .Get "width" }}width="{{ . }}"{{ end }} {{ with .Get "height" }}height="{{ . }}"{{ end }}>
-        </a>
-    {{ else }}
-        <img src="{{ .Get "src" }}" {{ with .Get "alt" }}alt="{{ . }}"{{ end }} {{ with .Get "width" }}width="{{ . }}"{{ end }} {{ with .Get "height" }}height="{{ . }}"{{ end }}>
-    {{ end }}
-    {{ if or (.Get "title") (.Get "caption") }}
-        <figcaption>{{ .Get "title" | default (.Get "caption") }}</figcaption>
-    {{ end }}
+  {{ if $image }}
+    <a href="{{ if $linkResource }}{{ $linkResource.RelPermalink }}{{ else }}{{ $link | safeURL }}{{ end }}" data-lity>
+      <img src="{{ $image.RelPermalink }}" {{ with .Get "alt" }}alt="{{ . }}"{{ end }} {{ with .Get "width" }}width="{{ . }}"{{ end }} {{ with .Get "height" }}height="{{ . }}"{{ end }}>
+    </a>
+  {{ end }}
+  {{ if or (.Get "title") (.Get "caption") }}
+    <figcaption>{{ .Get "title" | default (.Get "caption") }}</figcaption>
+  {{ end }}
 </figure>
