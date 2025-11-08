@@ -228,13 +228,13 @@ After setting up the entire pipeline, the logs are parsed, enriched, and stored 
 
 Here is an example of how the final log looks in OpenSearch Dashboards:
 
-{{< figure src="./opensearch-result.png" alt="Final result in OpenSearch" title="Final result in OpenSearch" link="./opensearch-result.png" >}}
+{{< figure src="opensearch-result.png" alt="Final result in OpenSearch" title="Final result in OpenSearch" link="opensearch-result.png" >}}
 
 In contrast, when the response is a standard JSON object, the entire body is logged, providing full visibility into the data being exchanged.
 
 Here is a view of a log containing a full JSON document as seen in OpenSearch:
 
-{{< figure src="./opensearch-json-document.png" alt="JSON document in OpenSearch" title="JSON document in OpenSearch" link="./opensearch-json-document.png" >}}
+{{< figure src="opensearch-json-document.png" alt="JSON document in OpenSearch" title="JSON document in OpenSearch" link="opensearch-json-document.png" >}}
 
 
 ### Conclusion
