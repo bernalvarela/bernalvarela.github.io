@@ -89,7 +89,6 @@ Here’s what a log entry for a file download looks like with our extension. Not
 #### 1. Get the Code
 Clone the repository from GitHub.
 ```sh
-# Replace with your actual GitHub username
 git clone https://github.com/bernalvarela/wiremock-log-extension.git
 cd wiremock-log-extension
 ```
@@ -157,58 +156,52 @@ input {
 }
 
 filter {
-    # We identify if the log comes from the WireMock stream by the tag added in the input.
+    # Process events tagged by the TCP input.
     if "wiremock_multiline_stream" in [tags] {
-
-        # 1. First, check if the reassembled message is a JSON log from our extension.
-        #    WireMock's own startup messages won't contain '{"@timestamp"'.
+    
+        # Drop any messages that are not the JSON logs from our extension (e.g., WireMock startup lines).
+        # Valid logs are identified by the presence of '{"@timestamp"'.
         if [message] !~ /\{\"@timestamp\"/ {
-            # If it's a startup log or any other non-JSON message, we drop it.
             drop {}
         }
-
-        # 2. If we are here, 'message' contains the full syslog line + the JSON payload.
-        #    We use grok to extract only the JSON part.
+    
+        # Extract the JSON payload from the full syslog message.
         grok {
-            # Capture everything starting from the first curly brace '{'.
-            # We use [\s\S]* to ensure we match any character, including newlines.
+            # Match everything from the first '{' to the end of the string.
             match => { "message" => "(?<json_content>\{[\s\S]*)" }
         }
-
-        # This block only executes if the grok filter was successful.
+    
+        # If the JSON payload was successfully extracted.
         if [json_content] {
-            # Clean up any residual newlines from the extracted JSON string before parsing.
+            # Sanitize the extracted content by removing any newline characters.
             mutate {
-                gsub => [
-                    "json_content", "\n", ""
-                ]
+                gsub => [ "json_content", "\n", "" ]
             }
-
-            # Parse the cleaned JSON string from the 'json_content' field.
+    
+            # Parse the sanitized string as JSON, populating the event with its fields.
             json {
                 source => "json_content"
             }
-
-            # Rename the original 'host' field to avoid conflicts and add clarity.
+    
+            # Rename the original 'host' field for clarity.
             mutate {
                 rename => { "host" => "source_host_details" }
             }
-
+    
             mutate {
-                # Set the target index for Elasticsearch/OpenSearch.
+                # Define a dynamic target index for OpenSearch/Elasticsearch.
                 add_field => { "[@metadata][target_index]" => "wiremock-logs-%{+YYYY.MM.dd}" }
-                # Clean up the fields we no longer need to keep the final document clean.
+                # Remove temporary and redundant fields for a cleaner final document.
                 remove_field => ["[event][original]", "json_content", "message", "tags"]
             }
         } else {
-            # If grok fails to extract the JSON, we tag the event for debugging.
+            # If Grok fails, tag the event for easier debugging.
             mutate {
                add_tag => ["_grok_json_extract_failure"]
             }
         }
     } else {
-        # Any log that doesn't have the 'wiremock_multiline_stream' tag is treated as an unknown log.
-        # Instead of dropping it, we route it to a separate error index for inspection.
+        # Route any other logs to a separate error index for review.
         mutate {
             add_field => { "[@metadata][target_index]" => "wiremock-errors-logs-%{+YYYY.MM.dd}" }
         }
